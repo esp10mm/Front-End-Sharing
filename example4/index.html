@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.1/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.1/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="./Card.jsx" type="text/babel"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const people = [
+        {
+          name: 'Jack',
+          age: 22
+        },
+        {
+          name: 'Jack2',
+          age: 22
+        },
+      ];
+
+      ReactDOM.render(
+        <div>
+          {
+            people.map(function(person) {
+              return <Card data={person} />
+            })
+          }
+        </div>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
