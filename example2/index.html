@@ -16,6 +16,12 @@
               return <li>{number}</li>
             })
           } 
+          Sum:
+          {
+            numbers.reduce(function(r, number) {
+              return number + r;
+            }, 0) 
+          }
         </div>,
         document.getElementById('root')
       );

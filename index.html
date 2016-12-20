@@ -1,44 +1,756 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <style type="text/css">
+    <meta charset="utf-8" />
+    <meta name="keywords" content="remark,remarkjs,markdown,slideshow,presentation" />
+    <meta name="description" content="A simple, in-browser, markdown-driven slideshow tool." />
+    <title>Remark</title>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-      body { font-family: 'Droid Serif'; }
+      body {
+        font-family: 'Droid Serif';
+      }
       h1, h2, h3 {
         font-family: 'Yanone Kaffeesatz';
-        font-weight: normal;
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+
+      .image {
+        max-width: 600px;
+        height: 261px;
+        background-image: url(http://www.codevoila.com/uploads/images/201607/reactjs_component_lifecycle_functions.png);
+        background-size: contain; 
+      }
     </style>
   </head>
   <body>
-    <textarea id="source">
+    <textarea id="source" style="display:none;">
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+#Front-End Sharing
+---
+# React.js
+---
+layout: false
+.left-column[
+  ## Why React?
+]
+.right-column[
+- Component Structure
 
-class: center, middle
+- Mixing HTML with JavaScript 
 
-# Front-End Sharing
+- Effiency 
+
+- Server-Side Rendering
+
+- Developer Tool
+
+- React Native
+]
 
 ---
+.left-column[
+  ## Hello World
+]
+.right-column[
+```xml
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.1/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.1/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      ReactDOM.render(
+        <div>
+          Hello World
+        </div>,
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
+```
+[Demo](./example1)
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+]
+.right-column[
+```xml
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    var numbers = [1, 2, 3, 4, 5];
+    ReactDOM.render(
+      <div>
+        { numbers }
+        {
+          numbers.map(function(number) {
+            return <li>{number}</li>
+          })
+        } 
+        Sum:
+        {
+          numbers.reduce(function(r, number) {
+            return number + r;
+          }, 0) 
+        }
+      </div>,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+```
+[Demo](./example2)
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+  ## Component
+]
+.right-column[
+index.html
+```xml
+...
+<script src="./App.jsx" type="text/babel"></script>
+...
+<script type="text/babel">
+  ReactDOM.render(
+    <div>
+*     <App />
+    </div>,
+    document.getElementById('root')
+  );
+</script>
+```
+app.jsx
+```javascript
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        Hello World
+      </div>
+    )
+  }
+}
+window.App = App;
+```
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+  ## Component
+  ## State
+]
+.right-column[
+Components automatically re-render after its state changes.
+
+app.jsx
+```javascript
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+*   this.state = { counter: 0 }
+*   this.increase = this.increase.bind(this);
+  }
+  increase() {
+    const old = this.state.counter;
+*   this.setState({ counter: old + 1 });
+  }
+      <div>
+        { this.state.counter }
+*       <button onClick={this.increase}>+1</button>
+      </div>
+    )
+  }
+}
+window.App = App;
+```
+[Demo](./example3)
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+  ## Component
+  ## State
+  ## Props
+]
+.right-column[
+Components automatically re-render after its props changes.
+
+Class Counter
+```javascript
+class Counter extends React.Component {
+  render() {
+    return (
+      <div>
+*       {this.props.data}
+      </div>
+    )
+  }
+}
+*Counter.propTypes = {
+*  data: React.PropTypes.number,
+*};
+```
+
+Class App
+```javascript
+...
+  render() {
+    return (
+      <div>
+*       <Counter data={this.state.counter} />
+        <button onClick={this.increase}>+1</button>
+      </div>
+    )
+  }
+...
+```
+[Demo](./example3)
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+  ## Component
+  ## State
+  ## Props
+  ## Mixing Up
+]
+.right-column[
+Class App
+```javascript
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { users: [] }
+    this.newid = 0;
+    this.increase = this.increase.bind(this);
+  }
+  increase() {
+    const age = Math.floor(Math.random() * 100);
+    this.state.users.push({ id: this.newid, age: age });
+    this.newid += 1;
+    this.setState({ users: this.state.users });
+  }
+  render() {
+    return (
+      <div style={{ margin: '5px' }}>
+        <button className="ui button" onClick={this.increase}>
+          +1
+        </button>
+        <div className="ui cards" style={{ paddingTop: '5px' }}>
+          {
+            this.state.users.map(function(user) {
+              return <Card data={user} key={user.id} />
+            })
+          }
+        </div>
+      </div>
+    )
+  }
+}
+```
+]
+---
+.left-column[
+  ## Hello World
+  ## Rendering Variable
+  ## Component
+  ## State
+  ## Props
+  ## Mixing Up
+]
+.right-column[
+Class Card
+```javascript
+class Card extends React.Component {
+  render() {
+    return (
+      <div className="ui card">
+        <div className="content">
+          <div className="header">
+            User {this.props.data.id}
+          </div>
+          <div className="meta">
+            Age: {this.props.data.age}
+          </div>
+          <div className="description">
+            description
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+Card.propTypes = {
+  data: React.PropTypes.object,
+};
+```
+[Demo](./example4)
+]
+---
+.left-column[
+  ## Component Lifecycle
+]
+.right-column[
+Each component has several "lifecycle methods" that you can override to run code at particular times in the process.
+
+.image[
+]
+
+]
+---
+.left-column[
+  ## Component Lifecycle
+  ## Mounting
+]
+.right-column[
+These methods will be called when component is created:
+
+- constructor() : init state, bind functions ...
+
+- componentWillMount() : do something before it mounts
+
+- render() : render init view
+
+- componentDidMount() : do something that should be done after init dom ready
+]
+---
+.left-column[
+  ## Component Lifecycle
+  ## Mounting
+  ## Updating & Unmounting
+]
+.right-column[
+Updating:
+
+These methods will be called when component re-render (porps or state changes, force update ...)
+
+- componentWillReceiveProps() : handle new props (processing format, maping props to state ...)
+
+- shouldComponentUpdate() : determine whether component should be updated
+
+- componentWillUpdate() : do something before it updates
+
+- render() : render view (same method called during mounting)
+
+- componentDidUpdate() : do something after it updates
+
+Unmounting:
+
+The method will be called when component unmount.
+
+- componentWillUnmount() : do something like removing useless dom ...
+
+]
+---
+template: inverse
+
+# Webpack
+---
+name: how
+
+.left-column[
+  ## How does it work?
+### - Markdown
+]
+.right-column[
+A Markdown-formatted chunk of text is transformed into individual slides by JavaScript running in the browser:
+
+```remark
+# Slide 1
+This is slide 1
+
+---
+
+# Slide 2
+This is slide 2
+```
+
+.slides[
+  .first[
+  ### Slide 1
+  This is slide 1
+  ]
+  .second[
+  ### Slide 2
+  This is slide 2
+  ]
+]
+
+Regular Markdown rules apply with only a single exception:
+
+  - A line containing three dashes constitutes a new slide
+  (not a horizontal rule, `&lt;hr /&gt;`)
+
+Have a look at the [Markdown website](http://daringfireball.net/projects/markdown/) if you're not familiar with Markdown formatting.
+]
+---
+.left-column[
+  ## How does it work?
+  ### - Markdown
+  ### - Inside HTML
+]
+.right-column[
+A simple HTML document is needed for hosting the styles, Markdown and the generated slides themselves:
+
+```xml
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      /* Slideshow styles */
+    </style>
+  </head>
+  <body>
+*    <textarea id="source">
+      <!-- Slideshow Markdown -->
+    &lt;/textarea&gt;
+*    <script src="remark.js">
+    </script>
+    <script>
+*      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+```
+
+You may download remark to have your slideshow not depend on any online resources, or reference the [latest version](http://remarkjs.com/downloads/remark-latest.min.js) online directly.
+]
+---
+template: inverse
+
+## Of course, Markdown can only go so far.
+---
+.left-column[
+  ## Markdown extensions
+]
+.right-column[
+To help out with slide layout and formatting, a few Markdown extensions have been included:
+
+- Slide properties, for naming, styling and templating slides
+
+- Content classes, for styling specific content
+
+- Syntax highlighting, supporting a range of languages
+]
+
+---
+.left-column[
+  ## Markdown extensions
+  ### - Slide properties
+]
+.right-column[
+Initial lines containing key-value pairs are extracted as slide properties:
+
+```remark
+name: agenda
+class: middle, center
 
 # Agenda
 
-1. Introduction
-2. Deep-dive
-3. ...
+The name of this slide is {{ name }}.
+```
+
+Slide properties serve multiple purposes:
+
+* Naming and styling slides using properties `name` and `class`
+
+* Using slides as templates using properties `template` and `layout`
+
+* Expansion of `{{ property }}` expressions to property values
+
+See the [complete list](https://github.com/gnab/remark/wiki/Markdown#slide-properties) of slide properties.
+]
+---
+.left-column[
+  ## Markdown extensions
+  ### - Slide properties
+  ### - Content classes
+]
+.right-column[
+Any occurences of one or more dotted CSS class names followed by square brackets are replaced with the contents of the brackets with the specified classes applied:
+
+```remark
+.footnote[.red.bold[*] Important footnote]
+```
+
+Resulting HTML extract:
+
+```xml
+<span class="footnote">
+  <span class="red bold">*</span> Important footnote
+</span>
+```
+]
+---
+.left-column[
+  ## Markdown extensions
+  ### - Slide properties
+  ### - Content classes
+  ### - Syntax Highlighting
+]
+.right-column[
+Code blocks can be syntax highlighted by specifying a language from the set of [supported languages](https://github.com/gnab/remark/wiki/Configuration#highlighting).
+
+Using [GFM](http://github.github.com/github-flavored-markdown/) fenced code blocks you can easily specify highlighting language:
+
+.pull-left[
+
+<pre><code>```javascript
+function add(a, b)
+  return a + b
+end
+```</code></pre>
+]
+.pull-right[
+
+<pre><code>```ruby
+def add(a, b)
+  a + b
+end
+```</code></pre>
+]
+
+A number of highlighting [styles](https://github.com/gnab/remark/wiki/Configuration#highlighting) are available, including several well-known themes from different editors and IDEs.
+
+]
+---
+.left-column[
+  ## Presenter mode
+]
+.right-column[
+To help out with giving presentations, a presenter mode comprising the
+following features is provided:
+
+- Display of slide notes for the current slide, to help you remember
+  key points
+
+- Display of upcoming slide, to let you know what's coming
+
+- Cloning of slideshow for viewing on extended display
+]
+---
+.left-column[
+  ## Presenter mode
+  ### - Inline notes
+]
+.right-column[
+Just like three dashes separate slides,
+three question marks separate slide content from slide notes:
+
+```
+Slide 1 content
+
+*???
+
+Slide 1 notes
 
 ---
 
-# Introduction
+Slide 2 content
 
+*???
+
+Slide 2 notes
+```
+
+Slide notes are also treated as Markdown, and will be converted in the
+same manner slide content is.
+
+Pressing __P__ will toggle presenter mode.
+]
+???
+Congratulations, you just toggled presenter mode!
+
+Now press __P__ to toggle it back off.
+---
+.left-column[
+  ## Presenter mode
+  ### - Inline notes
+  ### - Cloned view
+]
+.right-column[
+Presenter mode of course makes no sense to the audience.
+
+Creating a cloned view of your slideshow lets you:
+
+- Move the cloned view to the extended display visible to the audience
+
+- Put the original slideshow in presenter mode
+
+- Navigate as usual, and the cloned view will automatically keep up with the original
+
+Pressing __C__ will open a cloned view of the current slideshow in a new
+browser window.
+]
+---
+template: inverse
+
+## It's time to get started!
+---
+.left-column[
+  ## Getting started
+]
+.right-column[
+Getting up and running is done in only a few steps:
+
+1. Visit the [project site](http://github.com/gnab/remark)
+
+2. Follow the steps in the Getting Started section
+
+For more information on using remark, please check out the [wiki](https://github.com/gnab/remark/wiki) pages.
+]
+---
+name: last-page
+template: inverse
+
+## That's all folks (for now)!
+
+Slideshow created using [remark](http://github.com/gnab/remark).
     </textarea>
-    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script>
+      var hljs = remark.highlighter.engine;
+    </script>
+    <script src="remark.language.js"></script>
+    <script>
+      var slideshow = remark.create({
+          highlightStyle: 'monokai',
+          highlightLanguage: 'remark',
+          highlightLines: true
+        }) ;
     </script>
     <script>
-      var slideshow = remark.create();
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-44561333-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script');
+        ga.src = 'https://ssl.google-analytics.com/ga.js';
+        var s = document.scripts[0];
+        s.parentNode.insertBefore(ga, s);
+      }());
     </script>
   </body>
 </html>
