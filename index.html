@@ -130,6 +130,13 @@
         background-image: url(http://www.railsonmaui.com/images/2014-09-react-webpack-rails-tutorial/what-is-webpack.jpg);
         background-size: contain; 
       }
+
+      .image3 {
+        width: 800px;
+        height: 467px;
+        background-image: url(https://cdn-images-1.medium.com/max/800/1*MKL1Im4ElgB38_MsubiMjw.png);
+        background-size: contain; 
+      }
     </style>
   </head>
   <body>
@@ -143,24 +150,6 @@ class: center, middle, inverse
 # React.js
 ---
 layout: false
-.left-column[
-  ## Why React?
-]
-.right-column[
-- Component Structure
-
-- Mixing HTML with JavaScript 
-
-- Effiency 
-
-- Server-Side Rendering
-
-- Developer Tool
-
-- React Native
-]
-
----
 .left-column[
   ## Hello World
 ]
@@ -280,6 +269,8 @@ class App extends React.Component {
     const old = this.state.counter;
 *   this.setState({ counter: old + 1 });
   }
+  render() {
+    return (
       <div>
         { this.state.counter }
 *       <button onClick={this.increase}>+1</button>
@@ -465,6 +456,21 @@ The method will be called when component unmount.
 
 ]
 ---
+## Why React?
+
+- Component Structure
+
+- Mixing HTML with JavaScript 
+
+- Effiency 
+
+- Server-Side Rendering
+
+- Developer Tool
+
+- React Native
+
+---
 template: inverse
 
 # Webpack
@@ -606,228 +612,209 @@ module.exports = {
 - Developing Tool - hot reload, linting, uglifying and other plugins ...
 
 ---
+template: inverse
+
+# Redux
+---
 .left-column[
-  ## How does it work?
-  ### - Markdown
-  ### - Inside HTML
+  ## What is it?
 ]
 .right-column[
-A simple HTML document is needed for hosting the styles, Markdown and the generated slides themselves:
+####Redux is a predictable state container for JavaScript apps.
 
-```xml
-<!DOCTYPE html>
-<html>
-  <head>
-    <style type="text/css">
-      /* Slideshow styles */
-    </style>
-  </head>
-  <body>
-*    <textarea id="source">
-      <!-- Slideshow Markdown -->
-    &lt;/textarea&gt;
-*    <script src="remark.js">
-    </script>
-    <script>
-*      var slideshow = remark.create();
-    </script>
-  </body>
-</html>
-```
-
-You may download remark to have your slideshow not depend on any online resources, or reference the [latest version](http://remarkjs.com/downloads/remark-latest.min.js) online directly.
+.image3[
 ]
+]
+---
+## Example
+.left-column[
+  ##Structure
+]
+.right-column[
+```xml
+example6
+├── build
+│    ├── app.bundle.js
+│    └── app.bundle.js.map
+├── index.html
+├── package.json
+├── src
+│    ├── actions
+│    │    ├── index.js
+│    │    └── user.js
+│    ├── components
+│    │    ├── App.js
+│    │    └── Card.js
+│    ├── index.js
+│    ├── reducers
+│    │    ├── index.js
+│    │    └── user.js
+│    └── store.js
+└── webpack.config.js
+```
+[Demo](./example6)
+]
+---
+.left-column[
+  ##Structure
+  ##Actions
+]
+.right-column[
+index.js
+```javascript
+export * from './user';
+```
+user.js
+```javascript
+import request from 'superagent';
+export const AddUser = () => (
+  (dispatch) => {
+    request.get('https://randomuser.me/api/')
+      .then((resp) => {
+        const result = resp.body.results[0];
+        const newUser = {
+          username: result.login.username,
+          registered: result.registered,
+          pic: result.picture.large,
+        };
+        dispatch({
+          type: 'AddUser',
+          data: newUser,
+        });
+      });
+  }
+);
+```
+]
+---
+.left-column[
+  ##Structure
+  ##Actions
+  ##Reducers
+]
+.right-column[
+index.js
+```javascript
+import { combineReducers } from 'redux';
+import user from './user';
+const rootReducer = combineReducers({user});
+export default rootReducer;
+```
+user.js
+```javascript
+const initialState = [];
+const funcs = {};
+
+funcs.AddUser = (state, data) => (
+  [...state, data]
+);
+
+funcs.RemoveUser = (state, data) => (
+  state.filter(u => u.username !== data)
+);
+
+export default function user(state = initialState, action) {
+  if (funcs[action.type]) {
+    return funcs[action.type](state, action.data);
+  }
+  return state;
+}
+```
+]
+---
+.left-column[
+  ##Structure
+  ##Actions
+  ##Reducers
+  ##Connect With Views
+]
+.right-column[
+index.js
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import App from './components/App';
+import configureStore from './store';
+const rootElement = document.getElementById('root');
+const store = configureStore();
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+);
+```
+store.js
+```javascript
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import reducer from './reducers';
+const enhancer = () => ( 
+  compose(
+    applyMiddleware(thunk),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+);
+export default function createStoreWithMiddleware(initialState) {
+  return createStore(reducer, initialState, enhancer());
+}
+```
+]
+---
+.left-column[
+  ##Structure
+  ##Actions
+  ##Reducers
+  ##Connect With Views
+]
+.right-column[
+Map redux state and actions to root component's props
+
+App.js
+```javascript
+...
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => ({
+  db: state
+});
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);
+```
+]
+---
+##Why Redux?
+
+###Structure
+- Clean and understandable.
+
+### State 
+- It is easy to store (at server, cache or anywhere) and restore app state.
+
+### Test
+- You can make set of actions and inspect the final state easily.
+
+### Modularity
+- Redux keeps logic from view so you can reuse it on different app or platform.
 ---
 template: inverse
 
-## Of course, Markdown can only go so far.
----
-.left-column[
-  ## Markdown extensions
-]
-.right-column[
-To help out with slide layout and formatting, a few Markdown extensions have been included:
-
-- Slide properties, for naming, styling and templating slides
-
-- Content classes, for styling specific content
-
-- Syntax highlighting, supporting a range of languages
-]
-
----
-.left-column[
-  ## Markdown extensions
-  ### - Slide properties
-]
-.right-column[
-Initial lines containing key-value pairs are extracted as slide properties:
-
-```remark
-name: agenda
-class: middle, center
-
-# Agenda
-
-The name of this slide is {{ name }}.
-```
-
-Slide properties serve multiple purposes:
-
-* Naming and styling slides using properties `name` and `class`
-
-* Using slides as templates using properties `template` and `layout`
-
-* Expansion of `{{ property }}` expressions to property values
-
-See the [complete list](https://github.com/gnab/remark/wiki/Markdown#slide-properties) of slide properties.
-]
----
-.left-column[
-  ## Markdown extensions
-  ### - Slide properties
-  ### - Content classes
-]
-.right-column[
-Any occurences of one or more dotted CSS class names followed by square brackets are replaced with the contents of the brackets with the specified classes applied:
-
-```remark
-.footnote[.red.bold[*] Important footnote]
-```
-
-Resulting HTML extract:
-
-```xml
-<span class="footnote">
-  <span class="red bold">*</span> Important footnote
-</span>
-```
-]
----
-.left-column[
-  ## Markdown extensions
-  ### - Slide properties
-  ### - Content classes
-  ### - Syntax Highlighting
-]
-.right-column[
-Code blocks can be syntax highlighted by specifying a language from the set of [supported languages](https://github.com/gnab/remark/wiki/Configuration#highlighting).
-
-Using [GFM](http://github.github.com/github-flavored-markdown/) fenced code blocks you can easily specify highlighting language:
-
-.pull-left[
-
-<pre><code>```javascript
-function add(a, b)
-  return a + b
-end
-```</code></pre>
-]
-.pull-right[
-
-<pre><code>```ruby
-def add(a, b)
-  a + b
-end
-```</code></pre>
-]
-
-A number of highlighting [styles](https://github.com/gnab/remark/wiki/Configuration#highlighting) are available, including several well-known themes from different editors and IDEs.
-
-]
----
-.left-column[
-  ## Presenter mode
-]
-.right-column[
-To help out with giving presentations, a presenter mode comprising the
-following features is provided:
-
-- Display of slide notes for the current slide, to help you remember
-  key points
-
-- Display of upcoming slide, to let you know what's coming
-
-- Cloning of slideshow for viewing on extended display
-]
----
-.left-column[
-  ## Presenter mode
-  ### - Inline notes
-]
-.right-column[
-Just like three dashes separate slides,
-three question marks separate slide content from slide notes:
-
-```
-Slide 1 content
-
-*???
-
-Slide 1 notes
-
----
-
-Slide 2 content
-
-*???
-
-Slide 2 notes
-```
-
-Slide notes are also treated as Markdown, and will be converted in the
-same manner slide content is.
-
-Pressing __P__ will toggle presenter mode.
-]
-???
-Congratulations, you just toggled presenter mode!
-
-Now press __P__ to toggle it back off.
----
-.left-column[
-  ## Presenter mode
-  ### - Inline notes
-  ### - Cloned view
-]
-.right-column[
-Presenter mode of course makes no sense to the audience.
-
-Creating a cloned view of your slideshow lets you:
-
-- Move the cloned view to the extended display visible to the audience
-
-- Put the original slideshow in presenter mode
-
-- Navigate as usual, and the cloned view will automatically keep up with the original
-
-Pressing __C__ will open a cloned view of the current slideshow in a new
-browser window.
-]
----
-template: inverse
-
-## It's time to get started!
----
-.left-column[
-  ## Getting started
-]
-.right-column[
-Getting up and running is done in only a few steps:
-
-1. Visit the [project site](http://github.com/gnab/remark)
-
-2. Follow the steps in the Getting Started section
-
-For more information on using remark, please check out the [wiki](https://github.com/gnab/remark/wiki) pages.
-]
+# F&Q
 ---
 name: last-page
 template: inverse
 
-## That's all folks (for now)!
-
-Slideshow created using [remark](http://github.com/gnab/remark).
+# Thanks!
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
     <script>
