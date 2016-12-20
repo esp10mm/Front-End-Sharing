@@ -118,9 +118,16 @@
       }
 
       .image {
-        max-width: 600px;
-        height: 261px;
+        max-width: 800px;
+        height: 350px;
         background-image: url(http://www.codevoila.com/uploads/images/201607/reactjs_component_lifecycle_functions.png);
+        background-size: contain; 
+      }
+
+      .image2 {
+        width: 800px;
+        height: 480px;
+        background-image: url(http://www.railsonmaui.com/images/2014-09-react-webpack-rails-tutorial/what-is-webpack.jpg);
         background-size: contain; 
       }
     </style>
@@ -408,15 +415,10 @@ Card.propTypes = {
 [Demo](./example4)
 ]
 ---
-.left-column[
-  ## Component Lifecycle
-]
-.right-column[
+## Component Lifecycle
 Each component has several "lifecycle methods" that you can override to run code at particular times in the process.
 
 .image[
-]
-
 ]
 ---
 .left-column[
@@ -441,7 +443,7 @@ These methods will be called when component is created:
   ## Updating & Unmounting
 ]
 .right-column[
-Updating:
+####Updating:
 
 These methods will be called when component re-render (porps or state changes, force update ...)
 
@@ -455,7 +457,7 @@ These methods will be called when component re-render (porps or state changes, f
 
 - componentDidUpdate() : do something after it updates
 
-Unmounting:
+####Unmounting:
 
 The method will be called when component unmount.
 
@@ -467,43 +469,142 @@ template: inverse
 
 # Webpack
 ---
-name: how
+## What is it?
+Webpack is a module builder bundling resources.
 
-.left-column[
-  ## How does it work?
-### - Markdown
+.image2[
+
 ]
-.right-column[
-A Markdown-formatted chunk of text is transformed into individual slides by JavaScript running in the browser:
-
-```remark
-# Slide 1
-This is slide 1
-
 ---
+## Example
+.left-column[
+  ## index.html & structure
+]
 
-# Slide 2
-This is slide 2
+.right-column[
+index.html
+```xml
+<script src="./build/app.bundle.js"></script>
 ```
-
-.slides[
-  .first[
-  ### Slide 1
-  This is slide 1
-  ]
-  .second[
-  ### Slide 2
-  This is slide 2
-  ]
+structure
+```xml
+example5
+├── build
+│    ├── app.bundle.js
+│    └── app.bundle.js.map
+├── index.html
+├── package.json
+├── src
+│    ├── components
+│    │    ├── App.js
+│    │    └── Card.js
+│    └── index.js
+└── webpack.config.js
+```
+]
+---
+## Example
+.left-column[
+  ## index.html & structure
+  ## js files
 ]
 
-Regular Markdown rules apply with only a single exception:
+.right-column[
+index.js
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import App from './components/App';
 
-  - A line containing three dashes constitutes a new slide
-  (not a horizontal rule, `&lt;hr /&gt;`)
+const rootElement = document.getElementById('root');
 
-Have a look at the [Markdown website](http://daringfireball.net/projects/markdown/) if you're not familiar with Markdown formatting.
+render(
+  <div>
+    <App />
+  </div>,
+  rootElement
+);
+
+```
+class App
+```javascript
+import React from 'react';
+import Card from './Card';
+
+class App extends React.Component {
+...
+}
+...
+export default App;
+```
 ]
+---
+## Example
+.left-column[
+  ## index.html & structure
+  ## js files
+]
+
+.right-column[
+class Card
+```javascript
+import React from 'react';
+
+class Card extends React.Component {
+...
+}
+...
+export default Card;
+```
+]
+---
+## Example
+.left-column[
+  ## index.html & structure
+  ## js files
+  ## webpack config
+]
+
+.right-column[
+```javascript
+var webpack = require('webpack');
+module.exports = {
+  entry: {
+    app: './src/index.js',
+  },
+  devtool: 'source-map',
+  debug: true,
+  output: {
+    path: 'build',
+    filename: '[name].bundle.js',
+    publicPath: '/'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015'],
+        }
+      }, ... ]
+  },
+  plugins: [ ... ]
+};
+```
+]
+---
+## Why Webpack
+
+- JS Module - code reuse, using same module in server side and client side.
+
+- NPM - manging module and dependency easily.
+
+- Bundle - less http request
+
+- Developing Tool - hot reload, linting, uglifying and other plugins ...
+
 ---
 .left-column[
   ## How does it work?
